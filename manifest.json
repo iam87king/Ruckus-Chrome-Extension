@@ -1,0 +1,71 @@
+{
+    "name": "RuckusExtension",
+    "version": "3.9",
+    "manifest_version": 2,
+    "description": "Build an Extension for Ruckus!",
+    "icons" : {
+        "16": "images/favicon.png"
+    },
+    "background": {
+        "scripts": [
+            "js/lib/jquery-1.9.1.min.js",
+            "js/utils.js",
+            "js/background.js"
+        ],
+        "persistent": true
+    },
+    "omnibox": {
+        "keyword" : "rks"
+    },
+    "commands" : {
+        "copyGeneratedFisheyeLazyText" : {
+            "suggested_key" : {
+                "default": "Alt+C"
+            },
+            "description" : "Copy generated fisheye lazy text to your clipboard."
+        }
+    },
+    "browser_action": {
+        "default_popup": "html/popup.html"
+    },
+    "options_page": "html/options.html",
+    "content_scripts": [{
+        "matches": [
+            "https://jira.ruckuswireless.com/*"
+        ],
+        "js": [
+            "js/lib/jquery-1.9.1.min.js",
+            "js/content/utils.js",
+            "js/content/contentscript.js"
+        ]
+    }, {
+        "matches": [
+            "https://*:8443/*"
+        ],
+        "include_globs": ["*172.17*", "*10.206*"],
+        "js": [
+            "js/lib/jquery-1.9.1.min.js",
+            "js/content/testbedContentscript.js"
+        ]
+    }, {
+        "matches": [
+            "http://fisheye.video54.local/*"
+        ],
+        "js": [
+            "js/lib/jquery-1.9.1.min.js",
+            "js/utils.js",
+            "js/content/fisheyeContentscript.js"
+        ]
+    }],
+    "permissions": [
+        "activeTab",
+        "declarativeContent",
+        "storage",
+        "tabs",
+        "http://jenkins-tdc.video54.local:8080/",
+        "bookmarks",
+        "webRequest",
+        "https://*:8443/*"
+    ],
+    "update_url": "http://172.17.18.237:8787/updates.xml"
+}

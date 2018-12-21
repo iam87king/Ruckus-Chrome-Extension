@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="../js/lib/jquery-easyui-1.5.5.7/themes/gray/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/lib/jquery-easyui-1.5.5.7/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/rks.css">
+    <script src="../js/lib/jquery-1.9.1.min.js"></script>
+    <script src="../js/lib/jquery-easyui-1.5.5.7/jquery.easyui.min.js"></script>
+    <script src="../js/lib/lodash.min.js"></script>
+    <script src="../js/options/options.js"></script>
+</head>
+
+<body>
+    <div id="mainPanel" style="width : 650px; margin : 10px auto;">
+        <div title="Redirector">
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="redirectorDefaultTarget">Redirector Default Target</label>
+                <select id="redirectorDefaultTarget" name="redirectorDefaultTarget">
+                    <option value="JIRA">JIRA</option>
+                    <option value="FISYEYE">Fisheye</option>
+                </select>
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="redirectorJiraChar">Redirect to JIRA, when the input contains char:</label>
+                <input id="redirectorJiraChar" name="redirectorJiraChar">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="jiraUrlPrefix">JIRA URL prefix:</label>
+                <input id="jiraUrlPrefix" name="jiraUrlPrefix">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="redirectorFisheyeChar">Redirect to Fisheye, when the input contains char:</label>
+                <input id="redirectorFisheyeChar" name="redirectorFisheyeChar">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="fisheyeCharUrlPrefix">Fisheye URL prefix:</label>
+                <input id="fisheyeCharUrlPrefix" name="fisheyeCharUrlPrefix">
+            </div>
+        </div>
+        <div title="Auto Login">
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="autoLoginSwitcher">Auto Login:</label>
+                <input id="autoLoginSwitcher" name="autoLoginSwitcher">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="defaultUsername">Default Username:</label>
+                <input id="defaultUsername" name="defaultUsername">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="defaultPassword">Default Password:</label>
+                <input id="defaultPassword" name="defaultPassword">
+            </div>
+        </div>
+        <div title="Fisheye Lazy Text" id="ftlContainer">
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="fltTemplate">Template:</label>
+                <input id="fltTemplate" name="template" class="option-item textbox-item multiline">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="fltReviewerTextPrefix">Reviewer Text Prefix:</label>
+                <input id="fltReviewerTextPrefix" name="reviewerTextPrefix" class="option-item textbox-item">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="fltReviewerSeparator">Reviewer Separator:</label>
+                <input id="fltReviewerSeparator" name="reviewerSeparator" class="option-item textbox-item">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="fltReviewersReplacement">Reviewers Replacement:</label>
+                <input id="fltReviewersReplacement" name="reviewersReplacement" class="option-item textbox-item">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="ftlUrlReplacement">URL Replacement:</label>
+                <input id="ftlUrlReplacement" name="urlReplacement" class="option-item textbox-item">
+            </div>
+            <div class="row form-field">
+                <label class="form-field-label label-lg" for="ftlDescReplacement">Description Replacement:</label>
+                <input id="ftlDescReplacement" name="descReplacement" class="option-item textbox-item">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
