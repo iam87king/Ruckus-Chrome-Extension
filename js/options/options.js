@@ -1,6 +1,7 @@
 'use strict';
 
  const fieldWidth = 320;
+ const fieldHeight = 200;
 
 function initForm () {
     $('#mainPanel').accordion({
@@ -105,6 +106,22 @@ function initFisheyeLazyTextFields (options) {
 
 }
 
+function initAutofillCommentTextFields (options) {
+    if (!options.autofillCommentText) {
+        return;
+    }
+
+    $('#optAutofillComment .form-field .option-item.textbox-item').each(function (index, element) {
+        $(element).textbox({
+            width : fieldWidth,
+            multiline : element.className.indexOf('multiline') > -1,
+            height : (element.className.indexOf('multiline') > -1 ? 100 : 'auto'),
+            value : options.autofillCommentText[element.name],
+            inputEvents : getSavingOnBlurListener('textbox', 'options.autofillCommentText.' + element.name)
+        });
+    });
+}
+
 function initFormFields () {
     chrome.storage.sync.get('options', function (data) {
         if (!data.options) {
@@ -113,6 +130,7 @@ function initFormFields () {
         initRedirectorFields(data.options);
         initAutoLoginFields(data.options);
         initFisheyeLazyTextFields(data.options);
+        initAutofillCommentTextFields(data.options);
     });
 }
 

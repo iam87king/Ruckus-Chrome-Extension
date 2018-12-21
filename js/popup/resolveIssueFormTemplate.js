@@ -26,6 +26,8 @@ function initResolveIssueFormTemplate () {
     $('#bugSource').combobox(comboboxConfig);
 
     $('#releaseVersion').combobox(comboboxConfig);
+
+    $('#autofillComment').combobox(comboboxConfig);
 }
 
 function setResolveIssueFormTemplateData () {
@@ -39,5 +41,6 @@ function setResolveIssueFormTemplateData () {
         $('#i23s').combobox('setValue', data.resolveIssueFormData.i23s);
         $('#bugSource').combobox('setValue', data.resolveIssueFormData.bugSource);
         $('#releaseVersion').combobox('setValue', data.resolveIssueFormData.releaseVersion);
+        $('#autofillComment').combobox('setValue', data.resolveIssueFormData.autofillComment);
     });
 }

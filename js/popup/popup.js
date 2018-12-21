@@ -101,6 +101,13 @@ function initPopulateFormBtn () {
 
 					// Comment
 				    populateComment(data.resolveIssueFormData.module, data.resolveIssueFormData.releaseVersion);
+
+				    // Autofill Comment
+				    if (data.resolveIssueFormData.autofillComment === 'YES') {
+				    	chrome.storage.sync.get('options', function (data) {
+					        populateField ('text', 'Comment', data.options.autofillCommentText.template);
+					    });
+				    }
 		        }
 		    });
 		}
@@ -138,6 +145,7 @@ function initPopulateFormBtn () {
 		                resolveIssueFormData.i23s = $('#i23s').combobox('getValue');
 		                resolveIssueFormData.bugSource = $('#bugSource').combobox('getValue');
 						resolveIssueFormData.releaseVersion = $('#releaseVersion').combobox('getValue');
+						resolveIssueFormData.autofillComment  = $('#autofillComment').combobox('getValue');
 
 						chrome.storage.sync.set({ resolveIssueFormData : resolveIssueFormData }, () => $('#openFormTemplateBtn').tooltip('hide'));
 		            });

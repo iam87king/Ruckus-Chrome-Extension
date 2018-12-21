@@ -17,7 +17,8 @@ chrome.runtime.onInstalled.addListener(function(details) {
                     i23s : 'No',
                     bugSource : 'Legacy',
                     module : 'VSCG',
-                    releaseVersion : 'R5.1.1'
+                    releaseVersion : 'R5.1.1',
+                    autofillComment : 'YES'
                 }
             });
         }
@@ -45,6 +46,9 @@ chrome.runtime.onInstalled.addListener(function(details) {
                     reviewersReplacement : '{reviewers}',
                     urlReplacement : '{url}',
                     descReplacement : '{desc}'
+                },
+                autofillCommentText : {
+                    template : '<p>[Root Cause]</p>\n<p>[Solution]</p>\n<p>[UT & Result]</p>\n<p>(Result)</p>\n<p>[Code review link]</p>\n<p>http://fisheye.video54.local/cru/</p>\n<p>[Fix CL]</p><p>[Fix Version]</p>'
                 }
             }});
         }
