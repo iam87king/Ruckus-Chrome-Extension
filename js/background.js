@@ -48,7 +48,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
                     descReplacement : '{desc}'
                 },
                 autofillCommentText : {
-                    template : '<p>[Root Cause]</p>\n<p>[Solution]</p>\n<p>[UT & Result]</p>\n<p>(Result)</p>\n<p>[Code review link]</p>\n<p>http://fisheye.video54.local/cru/</p>\n<p>[Fix CL]</p><p>[Fix Version]</p>'
+                    template : '<p>[Root Cause]</p>\n<p>[Solution]</p>\n<p>[UT & Result]</p>\n<p>(Result)</p>\n<p>[Code review link]</p>\n<p>[KEY_CR]</p>\n<p>[Fix CL]</p>\n[KEY_CL]\n<p>[Fix Version]</p>'
                 }
             }});
         }

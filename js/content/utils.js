@@ -15,7 +15,26 @@ function populateTextField (fieldText, fieldValue) {
 }
 
 function populateIframeTextField(fieldValue) {
-    return $('#cke_comment iframe').contents().find('p').html(fieldValue);
+    var crSourceId = $('#devstatus-container').attr('data-issue-id');
+    var perforceChangeList = $( "label:contains('Perforce Change')").next('input').val().split(' ')[1];
+    var url = 'https://jira.ruckuswireless.com/rest/dev-status/1.0/issue/detail?issueId=' + crSourceId + '&applicationType=fecru&dataType=review';
+    var header = {
+        accept: '*/*'
+    };
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(response) {
+            var crId = response.detail[0].reviews[0].id;
+            var crUrl = 'http://fisheye.video54.local/cru/' + crId;
+
+            fieldValue = fieldValue.replace('[KEY_CR]', crUrl)
+            fieldValue = fieldValue.replace('[KEY_CL]', perforceChangeList)
+
+            return $('#comment-wiki-edit iframe').contents().find('p').html(fieldValue);
+        }
+    });
 }
 
 function populateSelectField (fieldText, fieldValue) {

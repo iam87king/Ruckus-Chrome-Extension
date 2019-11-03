@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			sendResponse({ isVisible : $('#description-val').length > 0 });
 			break;
 		case 'enablePerforceChange':
-			getCommonIssueWorkflowFormField('Perforce Change').prop('disabled', false);
+			getCommonIssueWorkflowFormField('Perforce Change').prop({'disabled': false, 'style': 'background: #fff !important'});
 			break;
 		case 'populateField':
 			populateField(request.fieldType, request.fieldText, request.fieldValue);
