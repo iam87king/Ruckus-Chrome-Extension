@@ -11,6 +11,12 @@ function getBuildServerUrl (module, releaseVersion) {
         case 'R5.1.1':
             url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/5.1.1/job/R5_1_1_VSCG_IMG/buildHistory/ajax';
             break;
+        case 'R5.1.2':
+            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/5.1.2/job/R5_1_2_VSCG_IMG/buildHistory/ajax';
+            break;
+        case 'R5.2':
+            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/ML/job/R5_2_VSCG_IMG/buildHistory/ajax';
+            break;
     };
 
     return url;

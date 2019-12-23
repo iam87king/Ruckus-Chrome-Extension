@@ -118,10 +118,11 @@ function initPopulateFormBtn () {
         showEvent : 'click',
 		hideEvent : 'dblclick',
 		position : 'left',
+		deltaY : 10,
         onUpdate : function (content) {
             content.panel({
                 width : 300,
-				height : 300,
+				height : 320,
                 border : false,
                 title : 'Set Default Values',
 				href : '../../html/resolveIssueFormTemplate.html',
