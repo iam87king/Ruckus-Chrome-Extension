@@ -70,3 +70,13 @@ function getIssueWorkflowFormFieldGroup (fieldText) {
         return this.textContent.trim() === fieldText;
     }).parents('.field-group:first');
 }
+
+function copyToClipboard(message) {
+    var bodyDom = document.getElementsByTagName('body')[0];
+    var tempInput = document.createElement('INPUT');
+    bodyDom.appendChild(tempInput);
+    tempInput.setAttribute('value', message)
+    tempInput.select();
+    document.execCommand('copy');
+    bodyDom.removeChild(tempInput);
+}

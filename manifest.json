@@ -31,7 +31,8 @@
     "options_page": "html/options.html",
     "content_scripts": [{
         "matches": [
-            "https://jira.ruckuswireless.com/*"
+            "https://jira.ruckuswireless.com/*",
+            "https://*:8443/*"
         ],
         "js": [
             "js/lib/jquery-1.9.1.min.js",

@@ -189,6 +189,18 @@ function initGenFisheyeLazyTextBtn () {
 	});
 }
 
+function initCopyMenuPathBtn () {
+	$('#copyMenuPath').linkbutton({
+	    text: 'Copy menu path',
+	    iconCls : 'icon-cut',
+		onClick : function () {
+			sendMessageToCurrentWindow({ action : 'copyMenuPath' }, function (response) {
+				window.close();
+			});
+		}
+	});
+}
+
 function initFormFields () {
 	initTicketRedirectorTextbox();
 	initBookmarkSearchTextBox();
@@ -196,6 +208,7 @@ function initFormFields () {
 	initEnablePerforceChangeBtn();
 	initPopulateFormBtn();
 	initGenFisheyeLazyTextBtn();
+	initCopyMenuPathBtn();
 }
 
 function activateFormFields (active) {

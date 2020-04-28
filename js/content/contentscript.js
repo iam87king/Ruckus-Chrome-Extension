@@ -16,5 +16,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		case 'populateField':
 			populateField(request.fieldType, request.fieldText, request.fieldValue);
 			break;
+		case 'copyMenuPath':
+			copyToClipboard($('#rks-menu-breadcrumb .x-breadcrumb-btn').toArray().map(item => item.textContent).join(' > '));
+			break;
 	};
 });
