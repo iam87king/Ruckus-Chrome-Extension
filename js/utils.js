@@ -1,6 +1,7 @@
 const Rks = {
     Constant : {
-        newLine : '\r\n'
+        NEW_LINE : '\r\n',
+        CACHE_MAX_CREDENTIAL_COUNT : 20
     }
 };
 
@@ -19,7 +20,7 @@ function getRedirectorUrl (redirectorOptions, ticketNumber) {
 
 function goToTicket (ticketNumber) {
     chrome.storage.sync.get('options', function (data) {
-        var newTicketNumber, jiraRegExp, fisheyeRegExp;
+        var jiraRegExp, fisheyeRegExp;
 
         if ($.isNumeric(ticketNumber)) {
             chrome.tabs.create({ url : getRedirectorUrl(data.options.redirector, ticketNumber) });

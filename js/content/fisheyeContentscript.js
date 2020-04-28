@@ -11,7 +11,7 @@ function getReviewers (reviewerTextPrefix, reviewerSeparator) {
 
 function getDescription () {
     var desc = $('#objectives-markup .markup');
-    desc.find('br').replaceWith(Rks.Constant.newLine);
+    desc.find('br').replaceWith(Rks.Constant.NEW_LINE);
     return desc.text().trim();
 }
 

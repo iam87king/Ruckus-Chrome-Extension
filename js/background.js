@@ -98,14 +98,49 @@ function updateCredentialReq (ip, requestId, username, password) {
         return;
     }
 
+    getPreUpdatePromise().then(function () {
+        chrome.storage.sync.get('credentials', function (data) {
+            var credentials = data.credentials || {};
+            credentials[ip] = {
+                ip : ip,
+                requestId : requestId,
+                username : username,
+                password : password
+            }
+    
+            chrome.storage.sync.set({credentials : credentials});
+        });
+    });
+}
+
+function getPreUpdatePromise () {
+    return new Promise(function (resolve, reject) {
+        chrome.storage.sync.get('credentials', function (data) {
+            if (data.credentials && Object.keys(data.credentials).length < Rks.Constant.CACHE_MAX_CREDENTIAL_COUNT) {
+                resolve(true);
+            } else {
+                removeOutdatedCredentials(resolve, reject);
+            }
+        });
+    });
+}
+
+function removeOutdatedCredentials(resolve, reject) {
     chrome.storage.sync.get('credentials', function (data) {
-        var credentials = data.credentials || {};
-        credentials[ip] = {
-            requestId : requestId,
-            username : username,
-            password : password
+        if (!data.credential) {
+            resolve(true);
+            return;
         }
-        chrome.storage.sync.set({credentials : credentials});
+
+        const newData = {};
+        const sortedValues = Object.values(data.credentials).sort(function (c1, c2) {
+            return c2.timeStamp - c1.timeStamp;
+        });
+
+        sortedValues.slice(0, Rks.Constant.CACHE_MAX_CREDENTIAL_COUNT).forEach(function (item) {
+            newData[item.ip] = item;
+        });
+        chrome.storage.sync.set({credentials : newData}, resolve);
     });
 }
 

@@ -17,6 +17,12 @@ function getBuildServerUrl (module, releaseVersion) {
         case 'R5.2':
             url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/ML/job/R5_2_VSCG_IMG/buildHistory/ajax';
             break;
+        case 'R5.2.1':
+            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/ML/job/R5_2_1_VSCG_IMG/buildHistory/ajax';
+            break;
+        case 'R6.0':
+            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/ML/job/R6_0_VSCG_IMG/buildHistory/ajax';
+            break;
     };
 
     return url;
@@ -63,7 +69,6 @@ function doAjax (url, method, params, headers, successCb) {
 function getLatestBuildNumberFromResponse (response) {
     var jDOM = $(response.trim());
     var latestBuildItem = jDOM.find('tr.build-row:first');
-    var latestBuildNumber;
 
     if (latestBuildItem.length === 0) {
         return;
