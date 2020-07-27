@@ -1,5 +1,6 @@
 function getIssueWorkflowForm () {
     return $('#issue-workflow-transition');
+
 }
 
 function getIssueWorkflowFormFieldLabel (fieldText) {
