@@ -32,7 +32,9 @@
     "content_scripts": [{
         "matches": [
             "https://jira.ruckuswireless.com/*",
-            "https://*:8443/*"
+            "https://*:8443/*",
+            "https://*:443/*",
+            "http://*:8080/*"
         ],
         "js": [
             "js/lib/jquery-1.9.1.min.js",
@@ -41,9 +43,10 @@
         ]
     }, {
         "matches": [
-            "https://*:8443/*"
+            "https://*:8443/*",
+            "https://*:443/*",
+            "http://*:8080/*"
         ],
-        "include_globs": ["*172.17*", "*10.206*"],
         "js": [
             "js/lib/jquery-1.9.1.min.js",
             "js/content/testbedContentscript.js"
