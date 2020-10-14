@@ -1,6 +1,6 @@
 {
     "name": "RuckusExtension",
-    "version": "3.9",
+    "version": "4.0.0",
     "manifest_version": 2,
     "description": "Build an Extension for Ruckus!",
     "icons" : {
@@ -52,15 +52,27 @@
             "js/content/testbedContentscript.js"
         ]
     }, {
-        "matches": [
-            "http://fisheye.video54.local/*"
-        ],
+        "matches": ["http://fisheye.video54.local/*"],
         "js": [
             "js/lib/jquery-1.9.1.min.js",
             "js/utils.js",
             "js/content/fisheyeContentscript.js"
         ]
+    }, {
+        "matches": ["http://jenkins-tdc.video54.local:8080/view/ESPP/view/POC/view/6.0-SZAAS/job/R6_0SZAAS_RKS_MP_SERVICES_PKG/*"],
+        "js": [
+            "js/lib/jquery-1.9.1.min.js",
+            "js/lib/jquery-easyui-1.5.5.7/jquery.easyui.min.js",
+            "js/content/jenkinsContentscript.js"
+        ],
+        "css": [
+            "js/lib/jquery-easyui-1.5.5.7/themes/gray/easyui.css",
+            "css/icon.css"
+        ]
     }],
+    "web_accessible_resources": [
+        "icons/*.png"
+    ],
     "permissions": [
         "activeTab",
         "declarativeContent",
@@ -69,7 +81,8 @@
         "http://jenkins-tdc.video54.local:8080/",
         "bookmarks",
         "webRequest",
-        "https://*:8443/*"
+        "https://*:8443/*",
+        "http://10.206.84.177:8787/versions/*"
     ],
     "update_url": "http://172.17.18.237:8787/updates.xml"
 }
