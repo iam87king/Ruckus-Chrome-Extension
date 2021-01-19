@@ -15,13 +15,16 @@ function getBuildServerUrl (module, releaseVersion) {
             url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/5.1.2/job/R5_1_2_VSCG_IMG/buildHistory/ajax';
             break;
         case 'R5.2':
-            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/ML/job/R5_2_VSCG_IMG/buildHistory/ajax';
+            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/5.2/job/R5_2_VSCG_IMG/buildHistory/ajax';
             break;
         case 'R5.2.1':
-            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/ML/job/R5_2_1_VSCG_IMG/buildHistory/ajax';
+            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/5.2.1/job/R5_2_1_VSCG_IMG/buildHistory/ajax';
             break;
         case 'R6.0':
-            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/ML/job/R6_0_VSCG_IMG/buildHistory/ajax';
+	        url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/6.0/job/R6_0_VSCG_IMG/buildHistory/ajax';
+            break;
+        case 'R6.1':
+            url = 'http://jenkins-tdc.video54.local:8080/view/ESPP/view/master/job/R6_1_VSCG_IMG/buildHistory/ajax';
             break;
     };
 
@@ -36,18 +39,17 @@ function getNextBuildNumber (buildNumber) {
     var buildNumberAry = buildNumber.split('.');
     var minorNumber = extractMinorBuildNumber(buildNumber);
 
+    if (isNaN(minorNumber)) {
+        return buildNumber;
+    }
+
     buildNumberAry[buildNumberAry.length - 1] = minorNumber + 1;
     return buildNumberAry.join('.');
 }
 
 function extractMinorBuildNumber (buildNumber) {
     var buildNumberAry = buildNumber.split('.');
-    var minorNumber = parseInt(buildNumberAry[buildNumberAry.length - 1], 10);
-
-    if (isNaN(minorNumber)) {
-        return buildNumber;
-    }
-    return minorNumber;
+    return parseInt(buildNumberAry[buildNumberAry.length - 1], 10);;
 }
 
 function extractReleaseNumber (buildNumber) {
@@ -151,11 +153,28 @@ function populateLatestBuildNumber (module, releaseVersion) {
     }, true);
 }
 
-function populateComment (module, releaseVersion) {
+function populateComment2 (module, releaseVersion) {
     getLatestBuildNumber(module, releaseVersion, function (latestBuildNumber) {
         populateField('iframe', 'Comment', 'Available since ' + latestBuildNumber);
     }, true);
 }
+
+function populateComment (resolveIssueFormData) {
+    var module = resolveIssueFormData.module;
+    var releaseVersion = resolveIssueFormData.releaseVersion;
+    var autofillComment = resolveIssueFormData.autofillComment;
+
+    if (autofillComment === 'Yes') {
+        chrome.storage.sync.get('options', function (data) {
+            populateField('iframe', 'Comment', data.options.autofillCommentText.template);
+        });
+    } else {
+        getLatestBuildNumber(module, releaseVersion, function (latestBuildNumber) {
+            populateField('iframe', 'Comment', 'Available since ' + latestBuildNumber);
+        }, true);
+    }
+}
+
 
 function showMask (show) {
     $('#mask').prependTo($('html'))[show ? 'show' : 'hide']();

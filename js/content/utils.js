@@ -15,10 +15,6 @@ function populateTextField (fieldText, fieldValue) {
     getCommonIssueWorkflowFormField(fieldText).val(fieldValue);
 }
 
-function populateIframeTextField(fieldValue) {
-    return $('#cke_comment iframe').contents().find('p').html(fieldValue);
-}
-
 function populateSelectField (fieldText, fieldValue) {
     var option = getCommonIssueWorkflowFormField(fieldText).find('option:contains("' + fieldValue + '")');
     if (option.length > 1) {
@@ -48,11 +44,7 @@ function populateIframeField (fieldText, fieldValue) {
 function populateField (fieldType, fieldText, fieldValue) {
     switch (fieldType) {
         case 'text':
-            if(fieldText !== 'Comment') {
-                populateTextField(fieldText, fieldValue);
-            } else {
-                populateIframeTextField(fieldValue);
-            }
+            populateTextField(fieldText, fieldValue);
             break;
         case 'select':
             populateSelectField(fieldText, fieldValue);

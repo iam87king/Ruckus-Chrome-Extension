@@ -100,14 +100,7 @@ function initPopulateFormBtn () {
 				    populateLatestBuildNumber(data.resolveIssueFormData.module, data.resolveIssueFormData.releaseVersion);
 
 					// Comment
-				    populateComment(data.resolveIssueFormData.module, data.resolveIssueFormData.releaseVersion);
-
-				    // Autofill Comment
-				    if (data.resolveIssueFormData.autofillComment === 'YES') {
-				    	chrome.storage.sync.get('options', function (data) {
-					        populateField ('text', 'Comment', data.options.autofillCommentText.template);
-					    });
-				    }
+				    populateComment(data.resolveIssueFormData);
 		        }
 		    });
 		}
