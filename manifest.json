@@ -1,6 +1,6 @@
 {
     "name": "RuckusExtension",
-    "version": "4.0.1",
+    "version": "4.1.1",
     "manifest_version": 2,
     "description": "Build an Extension for Ruckus!",
     "icons" : {
@@ -31,10 +31,7 @@
     "options_page": "html/options.html",
     "content_scripts": [{
         "matches": [
-            "https://jira.ruckuswireless.com/*",
-            "https://*:8443/*",
-            "https://*:443/*",
-            "http://*:8080/*"
+            "https://jira.ruckuswireless.com/*"
         ],
         "js": [
             "js/lib/jquery-1.9.1.min.js",
@@ -43,9 +40,7 @@
         ]
     }, {
         "matches": [
-            "https://*:8443/*",
-            "https://*:443/*",
-            "http://*:8080/*"
+            "https://*:8443/cas/login*"
         ],
         "js": [
             "js/lib/jquery-1.9.1.min.js",
@@ -68,6 +63,15 @@
         "css": [
             "js/lib/jquery-easyui-1.5.5.7/themes/gray/easyui.css",
             "css/icon.css"
+        ]
+    }, {
+        "matches": [
+            "https://jira-wiki.ruckuswireless.com/*"
+        ],
+        "js": [
+            "js/lib/jquery-1.9.1.min.js",
+            "js/content/utils.js",
+            "js/content/contentscript.js"
         ]
     }],
     "web_accessible_resources": [

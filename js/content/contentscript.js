@@ -19,5 +19,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		case 'copyMenuPath':
 			copyToClipboard($('#rks-menu-breadcrumb .x-breadcrumb-btn').toArray().map(item => item.textContent).join(' > '));
 			break;
+		case 'getDeployedServiceList':
+			sendResponse({ deployedServiceList: getDeployedServiceList()});
+			break;
 	};
 });

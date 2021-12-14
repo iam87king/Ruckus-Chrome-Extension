@@ -24,34 +24,37 @@ chrome.runtime.onInstalled.addListener(function(details) {
         }
     });
 
+    // Init options
     chrome.storage.sync.get('options', function (data) {
-        if (!data.options) {
-            chrome.storage.sync.set({ options : {
-                redirector : {
-                    defaultTarget : 'JIRA', // [JIRA, FISYEYE]
-                    jiraChar : 's',
-                    jiraUrlPrefix : 'https://jira.ruckuswireless.com/browse/SCG-',
-                    fisheyeChar : 'c',
-                    fisheyeCharUrlPrefix : 'http://fisheye.video54.local/cru/CR-',
-                },
-                autoLogin : {
-                    enabled : true,
-                    username : 'admin',
-                    password : 'admin!234'
-                },
-                fisheyeLazyText : {
-                    template : 'Hi {reviewers}, please help to review {url}, {desc}, thanks.',
-                    reviewerTextPrefix : '@',
-                    reviewerSeparator : ', ',
-                    reviewersReplacement : '{reviewers}',
-                    urlReplacement : '{url}',
-                    descReplacement : '{desc}'
-                },
-                autofillCommentText : {
-                    template : '[Root Cause]\n[Solution]\n[UT & Result]\n(Result)\n[Code review link]\nhttp://fisheye.video54.local/cru/\n[Fix CL][Fix Version]'
-                }
-            }});
+        if (data.options) {
+            return;
         }
+        chrome.storage.sync.set({ options : {
+            redirector : {
+                defaultTarget : 'JIRA', // [JIRA, FISYEYE]
+                jiraChar : 's',
+                jiraUrlPrefix : 'https://jira.ruckuswireless.com/browse/SCG-',
+                fisheyeChar : 'c',
+                fisheyeCharUrlPrefix : 'http://fisheye.video54.local/cru/CR-',
+            },
+            autoLogin : {
+                enabled : true,
+                username : 'admin',
+                password : 'admin!234'
+            },
+            fisheyeLazyText : {
+                template : 'Hi {reviewers}, please help to review {url}, {desc}, thanks.',
+                reviewerTextPrefix : '@',
+                reviewerSeparator : ', ',
+                reviewersReplacement : '{reviewers}',
+                urlReplacement : '{url}',
+                descReplacement : '{desc}'
+            },
+            autofillCommentText : {
+                template : '[Root Cause]\n[Solution]\n[UT & Result]\n(Result)\n[Code review link]\nhttp://fisheye.video54.local/cru/\n[Fix CL][Fix Version]'
+            },
+            acxServiceList: ['ddccm', 'ddccm-gen', 'ddccm-serv', 'device-lifecycle', 'device-notification', 'franz', 'dp', 'dp-api', 'dp-opdcollector', 'grpc-proxy-service', 'jwt-service', 'drs-broker', 'cmn-viewmodel-collector', 'rpointv2', 'session-manager', 'ccm-fetchd', 'cached', 'rac', 'wispr-portal']
+        }});
     });
 });
 

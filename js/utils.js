@@ -45,8 +45,33 @@ function getHostNameFromUrl (url) {
     return a.hostname;
 }
 
+function copyToClipboard(message) {
+    var bodyDom = document.getElementsByTagName('body')[0];
+    var tempInput = document.createElement('INPUT');
+    bodyDom.appendChild(tempInput);
+    tempInput.setAttribute('value', message)
+    tempInput.select();
+    document.execCommand('copy');
+    bodyDom.removeChild(tempInput);
+}
+
+function getFromStorage(key) {
+    return new Promise(function (resolve, reject) {
+        chrome.storage.sync.get(key, data => {
+            resolve(data[key]);
+        });
+    });
+}
+
 function sendMessageToCurrentWindow (request, callback) {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, request, callback);
+    return new Promise(function (resolve, reject) {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, request, res => {
+                if ($.isFunction(callback)) {
+                    callback(res);
+                }
+                resolve(res);
+            });
+        });
     });
 }

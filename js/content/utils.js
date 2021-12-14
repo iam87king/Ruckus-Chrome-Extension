@@ -73,3 +73,16 @@ function copyToClipboard(message) {
     document.execCommand('copy');
     bodyDom.removeChild(tempInput);
 }
+
+function getDeployedServiceList() {
+    const textServiceList = $("ol > li.auto-cursor-target:contains(Service owner confirm build number on Friday)").parents("ol:first").next().text();
+    const serviceList = textServiceList.split('/alto-cd deploy ').slice(1);
+    const result = [];
+
+    serviceList.forEach(item => {
+        item = item.replace(' master ', ':').replace(/\s*dev\s*/, '');
+        result.push(item);
+    });
+
+    return result;
+}

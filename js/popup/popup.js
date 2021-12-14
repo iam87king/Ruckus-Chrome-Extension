@@ -80,28 +80,29 @@ function initPopulateFormBtn () {
 	    iconCls : 'icon-fill-form',
 		onClick : function () {
 			chrome.storage.sync.get('resolveIssueFormData', function (data) {
-		        if (data.resolveIssueFormData) {
-		            // Collateral
-				    populateField ('select', 'Collateral', data.resolveIssueFormData.collateral);
-
-					// Fix Version/s
-					populateField ('suggestion', 'Fix Version/s', data.resolveIssueFormData.fixVersion);
-
-				    // Root Cause
-				    populateField ('text', 'Root CAUSE', data.resolveIssueFormData.rootCause);
-
-				    // integrate-to-active-branches
-				    populateField ('select', 'integrate-to-active-branches', data.resolveIssueFormData.i23s);
-
-					// Bug Source
-					populateField ('select', 'Bug Source', data.resolveIssueFormData.bugSource);
-
-				    // Fixed in Build
-				    populateLatestBuildNumber(data.resolveIssueFormData.module, data.resolveIssueFormData.releaseVersion);
-
-					// Comment
-				    populateComment(data.resolveIssueFormData);
+		        if (!data.resolveIssueFormData) {
+		            return;
 		        }
+				// Collateral
+				populateField ('select', 'Collateral', data.resolveIssueFormData.collateral);
+
+				// Fix Version/s
+				populateField ('suggestion', 'Fix Version/s', data.resolveIssueFormData.fixVersion);
+
+				// Root Cause
+				populateField ('text', 'Root CAUSE', data.resolveIssueFormData.rootCause);
+
+				// integrate-to-active-branches
+				populateField ('select', 'integrate-to-active-branches', data.resolveIssueFormData.i23s);
+
+				// Bug Source
+				populateField ('select', 'Bug Source', data.resolveIssueFormData.bugSource);
+
+				// Fixed in Build
+				populateLatestBuildNumber(data.resolveIssueFormData.module, data.resolveIssueFormData.releaseVersion);
+
+				// Comment
+				populateComment(data.resolveIssueFormData);
 		    });
 		}
 	});
@@ -194,6 +195,52 @@ function initCopyMenuPathBtn () {
 	});
 }
 
+function initGenACXServiceTagList() {
+	$('#genACXServiceTagList').linkbutton({
+	    text: 'Gen ACX Service Tag List',
+	    iconCls : 'icon-sum',
+		onClick : function () {
+			Promise.all([getFromStorage('options'), sendMessageToCurrentWindow({ action : 'getDeployedServiceList' })]).then(result => {
+				if (!result[0].acxServiceList || !result[1].deployedServiceList) {
+					return;
+				}
+
+				const acxServiceList = result[0].acxServiceList;
+				const deployedServiceList = result[1].deployedServiceList;
+				const command = '/alto-cd tag master dev';
+				const output = [];
+
+				deployedServiceList.forEach(svc => {
+					if (acxServiceList.includes(svc.slice(0, svc.indexOf(':')))) {
+						output.push(svc);
+					}
+				});
+
+				if (output.length === 0) {
+					return;
+				}
+
+				copyToClipboard(command + ' ' + output.join(','));
+
+				$.messager.show({
+					title: 'Generate slack command done',
+					msg: 'The command has been copied to your clipboard.',
+					timeout: 3000,
+					showType: 'slide',
+					showSpeed: 400,
+					width: 250,
+					height: 120,
+					style:{
+						right: '',
+						top: '',
+						bottom: 10
+					}
+				});
+			});
+		}
+	});
+}
+
 function initFormFields () {
 	initTicketRedirectorTextbox();
 	initBookmarkSearchTextBox();
@@ -202,6 +249,7 @@ function initFormFields () {
 	initPopulateFormBtn();
 	initGenFisheyeLazyTextBtn();
 	initCopyMenuPathBtn();
+	initGenACXServiceTagList();
 }
 
 function activateFormFields (active) {
