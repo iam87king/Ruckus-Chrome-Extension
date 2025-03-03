@@ -1,77 +1,63 @@
 const Rks = {
-    Constant : {
-        NEW_LINE : '\r\n',
-        CACHE_MAX_CREDENTIAL_COUNT : 20
+    Constant: {
+        NEW_LINE: '\r\n',
+        CACHE_MAX_CREDENTIAL_COUNT: 20
     }
 };
 
-function getRedirectorUrlWithTarget (target, redirectorOptions, ticketNumber) {
+function getRedirectorUrlWithTarget(target, redirectorOptions, ticketNumber) {
     switch (target) {
         case 'JIRA':
             return redirectorOptions.jiraUrlPrefix + ticketNumber;
         case 'FISYEYE':
             return redirectorOptions.fisheyeCharUrlPrefix + ticketNumber;
-    };
+    }
 }
 
-function getRedirectorUrl (redirectorOptions, ticketNumber) {
+function getRedirectorUrl(redirectorOptions, ticketNumber) {
     return getRedirectorUrlWithTarget(redirectorOptions.defaultTarget, redirectorOptions, ticketNumber);
 }
 
-function goToTicket (ticketNumber) {
-    chrome.storage.sync.get('options', function (data) {
-        var jiraRegExp, fisheyeRegExp;
+function goToTicket(ticketNumber) {
+    chrome.storage.sync.get('options', (data) => {
+        if (!data.options) return;
 
-        if ($.isNumeric(ticketNumber)) {
-            chrome.tabs.create({ url : getRedirectorUrl(data.options.redirector, ticketNumber) });
+        const { redirector } = data.options;
+        const jiraRegExp = new RegExp(redirector.jiraChar, 'g');
+        const fisheyeRegExp = new RegExp(redirector.fisheyeChar, 'g');
+
+        if (!isNaN(ticketNumber)) {
+            chrome.tabs.create({ url: getRedirectorUrl(redirector, ticketNumber) });
+        } else if (jiraRegExp.test(ticketNumber)) {
+            chrome.tabs.create({ url: getRedirectorUrlWithTarget('JIRA', redirector, ticketNumber.replace(jiraRegExp, '')) });
+        } else if (fisheyeRegExp.test(ticketNumber)) {
+            chrome.tabs.create({ url: getRedirectorUrlWithTarget('FISYEYE', redirector, ticketNumber.replace(fisheyeRegExp, '')) });
         } else {
-            jiraRegExp = new RegExp(data.options.redirector.jiraChar, 'g');
-            fisheyeRegExp = new RegExp(data.options.redirector.fisheyeChar, 'g');
-
-            if (jiraRegExp.test(ticketNumber)) {
-                chrome.tabs.create({ url : getRedirectorUrlWithTarget('JIRA', data.options.redirector, ticketNumber.replace(jiraRegExp, '')) });
-            } else if (fisheyeRegExp.test(ticketNumber)) {
-                chrome.tabs.create({ url : getRedirectorUrlWithTarget('FISYEYE', data.options.redirector, ticketNumber.replace(fisheyeRegExp, '')) });
-            } else {
-                chrome.tabs.create({ url : getRedirectorUrlWithTarget('JIRA', data.options.redirector, ticketNumber.replace(/\D/g, '')) });
-            }
+            chrome.tabs.create({ url: getRedirectorUrlWithTarget('JIRA', redirector, ticketNumber.replace(/\D/g, '')) });
         }
     });
 }
 
-function getHostNameFromUrl (url) {
-    var a = document.createElement('a');
-    a.href = url;
-    return a.hostname;
-}
-
-function copyToClipboard(message) {
-    var bodyDom = document.getElementsByTagName('body')[0];
-    var tempInput = document.createElement('INPUT');
-    bodyDom.appendChild(tempInput);
-    tempInput.setAttribute('value', message)
-    tempInput.select();
-    document.execCommand('copy');
-    bodyDom.removeChild(tempInput);
+function getHostNameFromUrl(url) {
+    try {
+        return new URL(url).hostname;
+    } catch (e) {
+        return '';
+    }
 }
 
 function getFromStorage(key) {
-    return new Promise(function (resolve, reject) {
-        chrome.storage.sync.get(key, data => {
-            resolve(data[key]);
-        });
+    return new Promise((resolve) => {
+        chrome.storage.sync.get(key, (data) => resolve(data[key]));
     });
 }
 
-function sendMessageToCurrentWindow (request, callback) {
-    return new Promise(function (resolve, reject) {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, request, res => {
-                if ($.isFunction(callback)) {
-                    callback(res);
-                }
-                resolve(res);
-            });
+function sendMessageToCurrentWindow(request) {
+    return new Promise((resolve) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs.length > 0) {
+                chrome.tabs.sendMessage(tabs[0].id, request, resolve);
+            }
         });
     });
 }

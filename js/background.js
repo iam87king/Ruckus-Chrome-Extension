@@ -1,172 +1,144 @@
 'use strict';
 
-chrome.runtime.onInstalled.addListener(function(details) {
-    chrome.storage.sync.get('buildNumberCache', function (data) {
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.storage.sync.get(['buildNumberCache', 'resolveIssueFormData', 'options'], (data) => {
         if (!data.buildNumberCache) {
-            chrome.storage.sync.set({ buildNumberCache : { latest : {} } });
+            chrome.storage.sync.set({ buildNumberCache: { latest: {} } });
         }
-    });
 
-    chrome.storage.sync.get('resolveIssueFormData', function (data) {
         if (!data.resolveIssueFormData) {
             chrome.storage.sync.set({
-                resolveIssueFormData : {
-                    collateral : 'NO',
-                    fixVersion : 'R5.1.1',
-                    rootCause : 'n/a',
-                    i23s : 'No',
-                    bugSource : 'Legacy',
-                    module : 'VSCG',
-                    releaseVersion : 'R5.1.1',
-                    autofillComment : 'YES'
+                resolveIssueFormData: {
+                    collateral: 'NO',
+                    fixVersion: 'R5.1.1',
+                    rootCause: 'n/a',
+                    i23s: 'No',
+                    bugSource: 'Legacy',
+                    module: 'VSCG',
+                    releaseVersion: 'R5.1.1',
+                    autofillComment: 'YES'
+                }
+            });
+        }
+
+        if (!data.options) {
+            chrome.storage.sync.set({
+                options: {
+                    redirector: {
+                        defaultTarget: 'JIRA',
+                        jiraChar: 's',
+                        jiraUrlPrefix: 'https://ruckus.atlassian.net/browse/ACX-',
+                        fisheyeChar: 'c',
+                        fisheyeCharUrlPrefix: 'http://fisheye.video54.local/cru/CR-',
+                    },
+                    autoLogin: {
+                        enabled: true,
+                        username: 'admin',
+                        password: 'admin!234'
+                    }
                 }
             });
         }
     });
-
-    // Init options
-    chrome.storage.sync.get('options', function (data) {
-        if (data.options) {
-            return;
-        }
-        chrome.storage.sync.set({ options : {
-            redirector : {
-                defaultTarget : 'JIRA', // [JIRA, FISYEYE]
-                jiraChar : 's',
-                jiraUrlPrefix : 'https://jira.ruckuswireless.com/browse/SCG-',
-                fisheyeChar : 'c',
-                fisheyeCharUrlPrefix : 'http://fisheye.video54.local/cru/CR-',
-            },
-            autoLogin : {
-                enabled : true,
-                username : 'admin',
-                password : 'admin!234'
-            },
-            fisheyeLazyText : {
-                template : 'Hi {reviewers}, please help to review {url}, {desc}, thanks.',
-                reviewerTextPrefix : '@',
-                reviewerSeparator : ', ',
-                reviewersReplacement : '{reviewers}',
-                urlReplacement : '{url}',
-                descReplacement : '{desc}'
-            },
-            autofillCommentText : {
-                template : '[Root Cause]\n[Solution]\n[UT & Result]\n(Result)\n[Code review link]\nhttp://fisheye.video54.local/cru/\n[Fix CL][Fix Version]'
-            },
-            acxServiceList: ['ddccm', 'ddccm-gen', 'ddccm-serv', 'device-lifecycle', 'device-notification', 'franz', 'dp', 'dp-api', 'dp-opdcollector', 'grpc-proxy-service', 'jwt-service', 'drs-broker', 'cmn-viewmodel-collector', 'rpointv2', 'session-manager', 'ccm-fetchd', 'cached', 'rac', 'wispr-portal']
-        }});
-    });
 });
 
-chrome.omnibox.onInputEntered.addListener(function(text, suggest) {
+chrome.omnibox.onInputEntered.addListener((text) => {
     goToTicket(text);
 });
 
-chrome.commands.onCommand.addListener(function(command) {
-    switch (command) {
-        case 'copyMenuPath':
-            sendMessageToCurrentWindow({ action : 'copyMenuPath' });
-            break;
-    };
+chrome.commands.onCommand.addListener((command) => {
+    if (command === 'copyMenuPath') {
+        sendMessageToCurrentWindow({ action: 'copyMenuPath' });
+    }
 });
 
-function updateCredentialRes (ip, statusCode, timeStamp, requestId) {
+function updateCredentialRes(ip, statusCode, timeStamp, requestId) {
     if (!ip || !statusCode || !timeStamp || !requestId) {
         return;
     }
 
-    chrome.storage.sync.get('credentials', function (data) {
+    chrome.storage.sync.get('credentials', (data) => {
         try {
-            if (data.credentials[ip].requestId == requestId) {
+            if (data.credentials[ip].requestId === requestId) {
                 data.credentials[ip].statusCode = statusCode;
                 data.credentials[ip].timeStamp = timeStamp;
-                chrome.storage.sync.set({credentials : data.credentials});
+                chrome.storage.sync.set({ credentials: data.credentials });
             }
         } catch (e) {
-            // ignore
+            console.error('Error updating credentials:', e);
         }
     });
 }
 
-function updateCredentialListenerRes (detail) {
-    if (detail.method != 'POST') {
+function updateCredentialListenerRes(detail) {
+    if (detail.method !== 'POST') {
         return;
     }
-
     updateCredentialRes(detail.ip, detail.statusCode, detail.timeStamp, detail.requestId);
 }
 
-function updateCredentialReq (ip, requestId, username, password) {
-    if (!ip || !requestId || !username || !username) {
+function updateCredentialReq(ip, requestId, username, password) {
+    if (!ip || !requestId || !username || !password) {
         return;
     }
 
-    getPreUpdatePromise().then(function () {
-        chrome.storage.sync.get('credentials', function (data) {
-            var credentials = data.credentials || {};
-            credentials[ip] = {
-                ip : ip,
-                requestId : requestId,
-                username : username,
-                password : password
-            }
-    
-            chrome.storage.sync.set({credentials : credentials});
+    getPreUpdatePromise().then(() => {
+        chrome.storage.sync.get('credentials', (data) => {
+            const credentials = data.credentials || {};
+            credentials[ip] = { ip, requestId, username, password };
+            chrome.storage.sync.set({ credentials });
         });
     });
 }
 
-function getPreUpdatePromise () {
-    return new Promise(function (resolve, reject) {
-        chrome.storage.sync.get('credentials', function (data) {
+function getPreUpdatePromise() {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get('credentials', (data) => {
             if (data.credentials && Object.keys(data.credentials).length < Rks.Constant.CACHE_MAX_CREDENTIAL_COUNT) {
                 resolve(true);
             } else {
-                removeOutdatedCredentials(resolve, reject);
+                removeOutdatedCredentials(resolve);
             }
         });
     });
 }
 
-function removeOutdatedCredentials(resolve, reject) {
-    chrome.storage.sync.get('credentials', function (data) {
-        if (!data.credential) {
+function removeOutdatedCredentials(resolve) {
+    chrome.storage.sync.get('credentials', (data) => {
+        if (!data.credentials) {
             resolve(true);
             return;
         }
 
-        const newData = {};
-        const sortedValues = Object.values(data.credentials).sort(function (c1, c2) {
-            return c2.timeStamp - c1.timeStamp;
-        });
+        const sortedValues = Object.values(data.credentials).sort((c1, c2) => c2.timeStamp - c1.timeStamp);
+        const newData = sortedValues.slice(0, Rks.Constant.CACHE_MAX_CREDENTIAL_COUNT).reduce((acc, item) => {
+            acc[item.ip] = item;
+            return acc;
+        }, {});
 
-        sortedValues.slice(0, Rks.Constant.CACHE_MAX_CREDENTIAL_COUNT).forEach(function (item) {
-            newData[item.ip] = item;
-        });
-        chrome.storage.sync.set({credentials : newData}, resolve);
+        chrome.storage.sync.set({ credentials: newData }, resolve);
     });
 }
 
-function updateCredentialListenerReq (detail) {
-    if (detail.method != 'POST' || $.isEmptyObject(detail.requestBody)) {
+function updateCredentialListenerReq(detail) {
+    if (detail.method !== 'POST' || !detail.requestBody || Object.keys(detail.requestBody).length === 0) {
         return;
     }
 
-    var ip = getHostNameFromUrl(detail.url);
-    var formData = detail.requestBody.formData;
-    var username = formData.username[0];
-    var password = formData.password[0];
-    updateCredentialReq(ip, detail.requestId, username, password);
+    const ip = getHostNameFromUrl(detail.url);
+    const formData = detail.requestBody.formData;
+    const username = formData.username?.[0];
+    const password = formData.password?.[0];
+
+    if (username && password) {
+        updateCredentialReq(ip, detail.requestId, username, password);
+    }
 }
 
-chrome.webRequest.onBeforeRedirect.addListener(updateCredentialListenerRes, {
-    urls : ['https://*:8443/cas/login*']
-});
+chrome.webRequest.onBeforeRequest.addListener(updateCredentialListenerReq, {
+    urls: ['https://*:8443/cas/login*']
+}, ['requestBody']);
 
 chrome.webRequest.onCompleted.addListener(updateCredentialListenerRes, {
-    urls : ['https://*:8443/cas/login*']
+    urls: ['https://*:8443/cas/login*']
 });
-
-chrome.webRequest.onBeforeRequest.addListener(updateCredentialListenerReq, {
-    urls : ['https://*:8443/cas/login*']
-}, ['requestBody']);
