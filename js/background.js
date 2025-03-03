@@ -64,8 +64,8 @@ chrome.omnibox.onInputEntered.addListener(function(text, suggest) {
 
 chrome.commands.onCommand.addListener(function(command) {
     switch (command) {
-        case 'copyGeneratedFisheyeLazyText':
-            sendMessageToCurrentWindow({ action : 'copyGeneratedFisheyeLazyText' });
+        case 'copyMenuPath':
+            sendMessageToCurrentWindow({ action : 'copyMenuPath' });
             break;
     };
 });

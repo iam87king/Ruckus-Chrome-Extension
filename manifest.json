@@ -1,6 +1,6 @@
 {
     "name": "RuckusExtension",
-    "version": "4.1.1",
+    "version": "4.2",
     "manifest_version": 2,
     "description": "Build an Extension for Ruckus!",
     "icons" : {
@@ -18,11 +18,11 @@
         "keyword" : "rks"
     },
     "commands" : {
-        "copyGeneratedFisheyeLazyText" : {
+        "copyMenuPath" : {
             "suggested_key" : {
-                "default": "Alt+C"
+                "default": "Alt+Shift+P"
             },
-            "description" : "Copy generated fisheye lazy text to your clipboard."
+            "description" : "Copy the current menu path of the R1 GUI to your clipboard."
         }
     },
     "browser_action": {
@@ -67,6 +67,15 @@
     }, {
         "matches": [
             "https://jira-wiki.ruckuswireless.com/*"
+        ],
+        "js": [
+            "js/lib/jquery-1.9.1.min.js",
+            "js/content/utils.js",
+            "js/content/contentscript.js"
+        ]
+    }, {
+        "matches": [
+            "https://*.ruckus.cloud/*"
         ],
         "js": [
             "js/lib/jquery-1.9.1.min.js",

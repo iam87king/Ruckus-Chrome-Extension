@@ -64,6 +64,28 @@ function getIssueWorkflowFormFieldGroup (fieldText) {
     }).parents('.field-group:first');
 }
 
+function copyMenuPath() {
+    const breadcrumbsList = $('.ant-breadcrumb > ol > li > span:first-child').toArray()
+        .filter(item => item.textContent.trim() !== '' && item.textContent.trim() !== '\u00A0') // '\u00A0' => &nbsp;
+        .map(item => item.textContent);
+    const headerText = getMenuSpecificHeaderText(breadcrumbsList, $('.ant-page-header-heading-title').text().split(' (')[0]);
+    const result = [...breadcrumbsList, headerText]
+    copyToClipboard(result.join(' → '));
+}
+
+function getMenuSpecificHeaderText (breadcrumbsList, headerText) {
+    if (breadcrumbsList.length <= 2) return headerText
+
+    if (headerText.startsWith('Add')) {
+        return '{Create}'
+    } else if (headerText.startsWith('Edit') || headerText.startsWith('Configure')) {
+        return '{Edit}'
+    }
+
+    return '{Details}'
+}
+
+
 function copyToClipboard(message) {
     var bodyDom = document.getElementsByTagName('body')[0];
     var tempInput = document.createElement('INPUT');
