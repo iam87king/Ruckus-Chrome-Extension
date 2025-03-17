@@ -253,7 +253,6 @@ function initFeatureFlagSearchTextbox () {
 					return;
 				}
 
-				// goToTicket($(e.data.target).textbox('getValue'));
 				searchFeatureFlag(e.target.value.trim(), $('#featureFlagStatusResult'))
 			}
 		}),
@@ -266,10 +265,10 @@ function initFeatureFlagSearchTextbox () {
 function initFormFields () {
 	initTicketRedirectorTextbox();
 	initBookmarkSearchTextBox();
-	initWidenDescAreaBtn();
-	initEnablePerforceChangeBtn();
-	initPopulateFormBtn();
-	initGenFisheyeLazyTextBtn();
+	// initWidenDescAreaBtn();
+	// initEnablePerforceChangeBtn();
+	// initPopulateFormBtn();
+	// initGenFisheyeLazyTextBtn();
 	initCopyMenuPathBtn();
 	initGenACXServiceTagList();
 	initFeatureFlagSearchTextbox();

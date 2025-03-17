@@ -117,7 +117,7 @@ function getFeatureFlagStatus(featureId) {
 
     const featureFlags = {};
     for (const key in localStorage) {
-        if (key.includes(featureId)) {
+        if (key.includes('.SPLITIO.split.') && key.includes(featureId)) {
             const flagData = JSON.parse(localStorage.getItem(key));
             featureFlags[key] = {
                 defaultTreatment: flagData.defaultTreatment,
