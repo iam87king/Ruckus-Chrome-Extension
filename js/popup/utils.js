@@ -179,3 +179,33 @@ function populateComment (resolveIssueFormData) {
 function showMask (show) {
     $('#mask').prependTo($('html'))[show ? 'show' : 'hide']();
 }
+
+
+function searchFeatureFlag (featureId, resultContainer) {
+    if (!featureId) return;
+
+    sendMessageToCurrentWindow({ action : 'getFeatureFlagStatus', featureId }).then(response => {
+        resultContainer.empty();
+
+        const featureFlags = response.result
+        if (!featureFlags || Object.keys(featureFlags).length === 0) {
+            resultContainer.append("<p>No matching feature flag found.</p>");
+            return;
+        }
+
+        Object.entries(featureFlags).forEach(([key, flag]) => {
+            const statusClass = flag.currentTenantTreatment === true
+                                ? "feature-flag-on" 
+                                : flag.currentTenantTreatment === false ? "feature-flag-off" : "feature-flag-unknown";
+            
+            const flagElement = `
+                <div class="feature-flag ${statusClass}">
+                    <strong>${key.split('.split.')[1]}</strong><br>
+                    Default: ${flag.defaultTreatment}<br>
+                    Current Tenant: ${flag.currentTenantTreatment}
+                </div>
+            `;
+            resultContainer.append(flagElement);
+        });
+    });
+}

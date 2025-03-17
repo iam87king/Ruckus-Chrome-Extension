@@ -43,3 +43,8 @@
 .input-md {
     width : 280px;
 }
+
+.feature-flag { margin: 5px 0; padding: 8px; border-radius: 5px; }
+.feature-flag-on { background-color: #d4edda; color: #155724; }
+.feature-flag-off { background-color: #f8d7da; color: #721c24; }
+.feature-flag-unknown { background-color: #fff3cd; color: #856404; }

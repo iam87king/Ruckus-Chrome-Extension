@@ -108,3 +108,40 @@ function getDeployedServiceList() {
 
     return result;
 }
+
+function getFeatureFlagStatus(featureId) {
+    const tenantIdMatch = window.location.href.match(/ruckus\.cloud\/(\w{32})\//);
+    const tenantId = tenantIdMatch ? tenantIdMatch[1] : null;
+
+    if (!tenantId) return;
+
+    const featureFlags = {};
+    for (const key in localStorage) {
+        if (key.includes(featureId)) {
+            const flagData = JSON.parse(localStorage.getItem(key));
+            featureFlags[key] = {
+                defaultTreatment: flagData.defaultTreatment,
+                currentTenantTreatment: getFeatureFlagStatusFromConditions(flagData.conditions, tenantId)
+            }
+        }
+    }
+
+    return featureFlags;
+}
+
+function getFeatureFlagStatusFromConditions(conditions, tenantId) {
+    let status;
+    
+    conditions.some(condition => {
+        if (condition.matcherGroup.matchers[0].matcherType === "WHITELIST") {
+            const tenantIds = condition.matcherGroup.matchers[0].whitelistMatcherData.whitelist;
+
+            if (tenantIds.includes(tenantId)) {
+                status = condition.partitions.some(partition => partition.treatment === "on" && partition.size > 0);
+                return true;
+            }
+        }
+    });
+    
+    return status;
+}

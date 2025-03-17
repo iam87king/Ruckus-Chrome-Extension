@@ -22,5 +22,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		case 'getDeployedServiceList':
 			sendResponse({ deployedServiceList: getDeployedServiceList()});
 			break;
+		case 'getFeatureFlagStatus':
+			sendResponse({ result: getFeatureFlagStatus(request.featureId) })
+			break;
 	};
 });

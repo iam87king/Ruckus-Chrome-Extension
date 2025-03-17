@@ -3,8 +3,8 @@
 function initTicketRedirectorTextbox () {
 	$('#ticketRedirectorTextbox').textbox({
 		buttonText : 'Search',
-    	iconCls : 'icon-search',
-    	iconAlign : 'left',
+    iconCls : 'icon-search',
+    iconAlign : 'left',
 		prompt : 'Any Number Here',
 		inputEvents : $.extend({}, $.fn.textbox.defaults.inputEvents, {
 			keyup : function (e) {
@@ -24,8 +24,8 @@ function initTicketRedirectorTextbox () {
 function initBookmarkSearchTextBox () {
 	$('#bookmarkSearchTextbox').combobox({
 		iconCls : 'icon-search',
-    	iconAlign : 'left',
-        prompt : 'Bookmark Title Here',
+    iconAlign : 'left',
+    prompt : 'Bookmark Title Here',
 		panelHeight : 'auto',
 		panelMaxHeight : 200,
 		valueField : 'url',
@@ -109,7 +109,7 @@ function initPopulateFormBtn () {
 
 	$('#openFormTemplateBtn').tooltip({
 		content : $('<div></div>'),
-        showEvent : 'click',
+    showEvent : 'click',
 		hideEvent : 'dblclick',
 		position : 'left',
 		deltaY : 10,
@@ -241,6 +241,28 @@ function initGenACXServiceTagList() {
 	});
 }
 
+function initFeatureFlagSearchTextbox () {
+	$('#featureFlagSearchTextbox').textbox({
+		buttonText : 'Search',
+    iconCls : 'icon-search',
+    iconAlign : 'left',
+		prompt : 'Feature Flag Here',
+		inputEvents : $.extend({}, $.fn.textbox.defaults.inputEvents, {
+			keyup : function (e) {
+				if (e.which !== 13) {
+					return;
+				}
+
+				// goToTicket($(e.data.target).textbox('getValue'));
+				searchFeatureFlag(e.target.value.trim(), $('#featureFlagStatusResult'))
+			}
+		}),
+		onClickButton : function () {
+			searchFeatureFlag(this.value.trim(), $('#featureFlagStatusResult'));
+		}
+	});
+}
+
 function initFormFields () {
 	initTicketRedirectorTextbox();
 	initBookmarkSearchTextBox();
@@ -250,6 +272,7 @@ function initFormFields () {
 	initGenFisheyeLazyTextBtn();
 	initCopyMenuPathBtn();
 	initGenACXServiceTagList();
+	initFeatureFlagSearchTextbox();
 }
 
 function activateFormFields (active) {
